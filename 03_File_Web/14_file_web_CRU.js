@@ -8,7 +8,7 @@ function templateHtml(list, navBar, title, desc) {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>File Web-CR</title>
+            <title>File Web-CRU</title>
             <meta charset="utf-8">
         </head>
         <body>
