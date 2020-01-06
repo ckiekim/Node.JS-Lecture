@@ -1,8 +1,5 @@
 var http = require('http');
 
-
-
-
 function navMsg() {
     return `
         <!DOCTYPE html>
@@ -29,7 +26,6 @@ function navMsg() {
     `;
 } 
 var app = http.createServer(function(request, response) {
-    //console.log(request.url);
     response.writeHead(200);
     let msg = navMsg();
     response.end(msg);
