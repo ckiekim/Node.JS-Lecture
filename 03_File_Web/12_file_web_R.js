@@ -7,7 +7,7 @@ function templateHtml(list, title, desc) {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>File Web</title>
+            <title>File Web-R</title>
             <meta charset="utf-8">
         </head>
         <body>
