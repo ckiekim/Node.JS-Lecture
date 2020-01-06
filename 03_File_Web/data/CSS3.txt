@@ -1,0 +1,2 @@
+CSS3는 Cascading Style Sheets(CSS) 언어의 가장 최신 버전이고 
+CSS2.1을 상속하는 것을 목표로 합니다.
