@@ -54,7 +54,7 @@ var app = http.createServer(function(req, res) {
                     let html = templateHtml(list, title, desc);
                     res.writeHead(200);
                     res.end(html);
-                })
+                });
             });
         }
     } else if (pathname === '/favicon.ico') {

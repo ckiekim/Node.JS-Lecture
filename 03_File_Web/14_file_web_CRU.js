@@ -54,7 +54,7 @@ var app = http.createServer(function(req, res) {
         } else {        // localhost:3000/?title=xxx
             let title = queryData.title;
             let navBar = `<a href="/">홈으로</a>&nbsp;&nbsp;
-                            <a href="/update">수정하기</a>&nbsp;&nbsp;
+                            <a href="/update?title=${title}">수정하기</a>&nbsp;&nbsp;
                             <a href="/delete">삭제하기</a>`;
             fs.readdir('./data', function(err, files) {
                 let list = templateList(files);
@@ -108,6 +108,56 @@ var app = http.createServer(function(req, res) {
             fs.writeFile(`./data/${title}.txt`, desc, 'utf8', function(err) {
                 res.writeHead(302, {Location: `/?title=${title}`});
                 res.end();
+            });
+        });
+    } else if (pathname === '/update') {
+        let title = queryData.title;
+        fs.readdir('./data', function(err, files) {
+            let list = templateList(files);
+            let navBar = `<a href="/">홈으로</a>`;
+            fs.readFile(`./data/${title}.txt`, 'utf8', function(err, desc) {
+                let html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>File Web-CRU</title>
+                    <meta charset="utf-8">
+                </head>
+                <body>
+                    <h1><a href="/">WEB 프로그래밍 기술</a></h1>
+                    <h3>${list}</h3>
+                    <hr>
+                    <h4>${navBar}</h4>
+                    <hr>
+                    <h2>글 수정하기</h2>
+                    <form action="/update_proc" method="post">
+                        <input type="hidden" name="oldTitle" value="${title}">
+                        <p><input type="text" size="40" name="title" value="${title}"></p>
+                        <p><textarea name="desc" rows="5" cols="60">${desc}</textarea></p>
+                        <p><input type="submit" value="수정"></p>
+                    </form>
+                </body>
+                </html>
+            `;
+                res.writeHead(200);
+                res.end(html);
+            });
+        });
+    } else if (pathname === '/update_proc') {
+        var body = '';
+        req.on('data', function(data) {
+            body += data;
+        });
+        req.on('end', function() {
+            let post = qs.parse(body);
+            let oldTitle = post.oldTitle;
+            let title = post.title;
+            let desc = post.desc;
+            fs.rename(`./data/${oldTitle}.txt`, `./data/${title}.txt`, function() {
+                fs.writeFile(`./data/${title}.txt`, desc, 'utf8', function(err) {
+                    res.writeHead(302, {Location: `/?title=${title}`});
+                    res.end();
+                });
             });
         });
     } else if (pathname === '/favicon.ico') {
