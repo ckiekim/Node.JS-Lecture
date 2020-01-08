@@ -55,5 +55,24 @@ module.exports = {
     },
     navOp: function() {
         return `<a href="/">홈으로</a>`;
+    },
+    tableMain: function(row) {
+        return `<tr>
+            <td>${row.id}</td>
+            <td style="text-align: left;"><a href="/?id=${row.id}">${row.title}</a></td>
+            <td>${row.writer}</td>
+            <td>${row.ts}</td>
+            <td style="text-align: right;">${row.hit}</td>
+        </tr>`;
+    },
+    tableItem: function(row) {
+        let _content = row.content.replace(/\r\n/g, '<br>');
+        return `
+            <tr><td>ID</td><td>${row.id}</td></tr>
+            <tr><td>제목</td><td>${row.title}</td></tr>
+            <tr><td>글쓴이</td><td>${row.writer}</td></tr>
+            <tr><td>최종수정시간</td><td>${row.ts}</td></tr>
+            <tr><td>조회수</td><td>${row.hit}</td></tr>
+            <tr><td>내용</td><td>${_content}</td></tr>`;
     }
 }
