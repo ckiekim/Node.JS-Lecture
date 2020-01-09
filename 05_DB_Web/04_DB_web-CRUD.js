@@ -101,6 +101,29 @@ var app = http.createServer(function(req, res) {
             res.writeHead(302, {Location: `/?id=${idVal}`});
             res.end();
         });
+    } else if (pathname === '/delete') {
+        let title = queryData.title;
+        fs.readdir('./data', function(err, files) {
+            let list = template.List(files);
+            let navBar = template.navOp();
+            let view = require('./view/delete');
+            let html = view.delete(list, navBar, title);
+            res.writeHead(200);
+            res.end(html);
+        });
+    } else if (pathname === '/delete_proc') {
+        var body = '';
+        req.on('data', function(data) {
+            body += data;
+        });
+        req.on('end', function() {
+            let post = qs.parse(body);
+            let title = post.title;
+            fs.unlink(`./data/${title}.txt`, function(err) {
+                res.writeHead(302, {Location: '/'});
+                res.end();
+            });
+        });
     } else if (pathname === '/favicon.ico') {
         fs.readFile('nodejs.png', function(err, data) {
             res.statusCode = 200;
