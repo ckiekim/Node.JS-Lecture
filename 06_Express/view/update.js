@@ -3,7 +3,7 @@ module.exports.update = function(navBar, row) {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>DB Web</title>
+            <title>Express Web</title>
             <meta charset="utf-8">
             <style>
                 table {
@@ -16,14 +16,14 @@ module.exports.update = function(navBar, row) {
             <hr>
             <h4>${navBar}</h4>
             <hr>
-            <form action="/update_proc" method="post">
+            <form action="/update" method="post">
                 <table>
                     <input type="hidden" name="id" value="${row.id}">
                     <tr><td width="180">ID</td><td>${row.id}</td></tr>
                     <tr><td>제목</td>
                         <td style="text-align: left;"><input type="text" size="40" name="title" value="${row.title}"></td></tr>
                     <tr><td>글쓴이</td>
-                        <td style="text-align: left;"><input type="text" size="40" name="writer" value="${row.writer}"></td></tr>
+                        <td style="text-align: left;"><input type="text" size="40" name="userId" value="${row.userId}"></td></tr>
                     <tr><td>최종 수정시간</td><td>${row.ts}</td></tr> 
                     <tr><td>조회수</td><td>${row.hit}</td></tr>                    
                     <tr><td>내용</td>

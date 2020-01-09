@@ -5,11 +5,12 @@ var qs = require('querystring');
 var sqlite3 = require('sqlite3').verbose();
 var template = require('./view/template');
 
-var listSql = "SELECT id, title, writer, strftime('%Y-%m-%d %H:%M', timestamp, 'localtime') ts, content, hit FROM bbs";
-var searchSql = "SELECT id, title, writer, strftime('%Y-%m-%d %H:%M', timestamp, 'localtime') ts, content, hit FROM bbs where id=?";
+var listSql = `SELECT id, title, writer, strftime('%Y-%m-%d %H:%M', timestamp, 'localtime') ts, content, hit FROM bbs`;
+var searchSql = `SELECT id, title, writer, strftime('%Y-%m-%d %H:%M', timestamp, 'localtime') ts, content, hit FROM bbs where id=?`;
 var incHitSql = `UPDATE bbs SET hit=(SELECT hit FROM bbs WHERE id=?)+1 WHERE id=?`;
 var insertSql = `INSERT INTO bbs(title, writer, content) VALUES(?, ?, ?)`;
 var updateSql = `UPDATE bbs SET title=?, writer=?, timestamp=datetime('now'), content=? WHERE id=?`;
+var deleteSql = `DELETE FROM bbs WHERE id=?`;
 var db = new sqlite3.Database("db/bbs.db");
 
 var app = http.createServer(function(req, res) {
@@ -102,15 +103,17 @@ var app = http.createServer(function(req, res) {
             res.end();
         });
     } else if (pathname === '/delete') {
-        let title = queryData.title;
-        fs.readdir('./data', function(err, files) {
-            let list = template.List(files);
-            let navBar = template.navOp();
+        let idVal = parseInt(queryData.id);
+        let navBar = template.navOp();
+
+        let stmt = db.prepare(searchSql);
+        stmt.get(idVal, function(err, row) {
             let view = require('./view/delete');
-            let html = view.delete(list, navBar, title);
+            let html = view.delete(navBar, row);
             res.writeHead(200);
             res.end(html);
         });
+        stmt.finalize();
     } else if (pathname === '/delete_proc') {
         var body = '';
         req.on('data', function(data) {
@@ -118,11 +121,13 @@ var app = http.createServer(function(req, res) {
         });
         req.on('end', function() {
             let post = qs.parse(body);
-            let title = post.title;
-            fs.unlink(`./data/${title}.txt`, function(err) {
-                res.writeHead(302, {Location: '/'});
-                res.end();
-            });
+            let idVal = parseInt(post.id);
+
+            let stmt = db.prepare(deleteSql);
+            stmt.run(idVal);
+            stmt.finalize();
+            res.writeHead(302, {Location: '/'});
+            res.end();
         });
     } else if (pathname === '/favicon.ico') {
         fs.readFile('nodejs.png', function(err, data) {

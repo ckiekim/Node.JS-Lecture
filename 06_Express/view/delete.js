@@ -3,7 +3,7 @@ module.exports.delete = function(navBar, row) {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>DB Web</title>
+            <title>Express Web</title>
             <meta charset="utf-8">
             <style>
                 table {
@@ -16,7 +16,7 @@ module.exports.delete = function(navBar, row) {
             <hr>
             <h4>${navBar}</h4>
             <hr>
-            <form action="/delete_proc" method="post">
+            <form action="/delete" method="post">
                 <input type="hidden" name="id" value="${row.id}">
                 <p>${row.title} 글을 삭제하시겠습니까?</p>
                 <p><input type="submit" value="확인"></p>
